@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Бронирование столов — Сандык Алматы</title>
+  <title>Бронирование столов — Сандык</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
   <style>
@@ -54,7 +54,7 @@
       color: rgba(0,0,0,0.4);
     }
     
-    /* ===== SVG ЦВЕТА ЧЕРЕЗ CSS ===== */
+    /* ===== SVG ЦВЕТА ===== */
     .floor-plan-svg {
       display: block;
       width: 100%;
@@ -64,7 +64,6 @@
     }
     .floor-plan-svg:active { cursor: grabbing; }
     
-    /* Увеличиваем текст на столах */
     .floor-plan-svg .table-text {
       font-size: 18px !important;
       font-weight: 700;
@@ -126,6 +125,294 @@
     .floor-plan::-webkit-scrollbar-thumb { background: rgba(247,151,30,0.4); border-radius: 4px; }
     body.light-theme .floor-plan::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
     body.light-theme .floor-plan::-webkit-scrollbar-thumb { background: rgba(196,154,42,0.5); }
+
+    /* ===== КОНТЕЙНЕР ===== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 15px 30px;
+      background: rgba(10,10,20,0.6);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      min-height: 100vh;
+    }
+    body.light-theme .container {
+      background: rgba(255,248,240,0.85);
+      border-color: rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #f7971e;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 15px;
+    }
+    body.light-theme .subtitle {
+      color: rgba(0,0,0,0.4);
+    }
+
+    /* ===== ВКЛАДКИ ЗАЛОВ ===== */
+    .hall-tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .hall-tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .hall-tab:hover {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.8);
+    }
+    .hall-tab.active {
+      background: linear-gradient(135deg, #f7971e, #e67e22);
+      color: white;
+      border-color: #f7971e;
+      box-shadow: 0 4px 15px rgba(247,151,30,0.2);
+    }
+    body.light-theme .hall-tab {
+      border-color: rgba(0,0,0,0.12);
+      background: rgba(0,0,0,0.03);
+      color: rgba(0,0,0,0.4);
+    }
+    body.light-theme .hall-tab:hover {
+      background: rgba(0,0,0,0.06);
+      color: #2a1508;
+    }
+    body.light-theme .hall-tab.active {
+      background: linear-gradient(135deg, #f7971e, #e67e22);
+      color: white;
+      border-color: #f7971e;
+    }
+
+    /* ===== МОДАЛКА БРОНИ ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 15px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: rgba(20,20,40,0.96);
+      backdrop-filter: blur(25px);
+      max-width: 420px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 25px 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      animation: fadeUp 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    body.light-theme .modal-card {
+      background: rgba(255,248,240,0.98);
+      border-color: rgba(0,0,0,0.06);
+    }
+    body.light-theme .modal-card h3 { color: #2a1508; }
+    body.light-theme .modal-card .table-number { color: #f7971e; }
+    body.light-theme .modal-card .table-info { color: rgba(0,0,0,0.5); }
+    body.light-theme .modal-card .placeholder-text {
+      color: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.04);
+    }
+    body.light-theme .modal-card input,
+    body.light-theme .modal-card select,
+    body.light-theme .modal-card textarea {
+      background: rgba(255,255,255,0.8);
+      border-color: rgba(0,0,0,0.1);
+      color: #2a1508;
+    }
+    body.light-theme .modal-card input:focus,
+    body.light-theme .modal-card select:focus,
+    body.light-theme .modal-card textarea:focus {
+      border-color: #f7971e;
+    }
+    body.light-theme .btn-close {
+      background: rgba(0,0,0,0.06);
+      color: rgba(0,0,0,0.5);
+    }
+    body.light-theme .btn-close:hover { background: rgba(0,0,0,0.1); }
+    body.light-theme .btn-book { background: #f7971e; }
+    body.light-theme .btn-book:hover { background: #e67e22; }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: scale(0.95) translateY(30px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-card .table-number {
+      color: #f7971e;
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+    .modal-card .table-info {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+    .modal-card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 10px;
+    }
+    .modal-card .placeholder-text {
+      color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.03);
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+    }
+    .modal-card input,
+    .modal-card select,
+    .modal-card textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+    }
+    .modal-card input[type="date"] {
+      width: 100%;
+      box-sizing: border-box;
+      color-scheme: dark;
+      min-width: auto;
+      max-width: 100%;
+    }
+    body.light-theme .modal-card input[type="date"] {
+      color-scheme: light;
+    }
+    .modal-card input:focus,
+    .modal-card select:focus,
+    .modal-card textarea:focus {
+      outline: none;
+      border-color: #f7971e;
+    }
+    .modal-card .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .modal-card .btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .btn-book {
+      background: linear-gradient(135deg, #f7971e, #e67e22);
+      color: #fff;
+    }
+    .btn-book:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(247,151,30,0.3);
+    }
+    .btn-close {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.5);
+    }
+    .btn-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(20,20,40,0.96);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 14px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: all 0.4s;
+      z-index: 1000;
+      font-size: 0.85rem;
+      text-align: center;
+      min-width: 200px;
+      max-width: 90%;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast.success { border-left: 4px solid #2ecc71; }
+    .toast.error { border-left: 4px solid #e74c3c; }
+    body.light-theme .toast {
+      background: rgba(255,248,240,0.96);
+      color: #2a1508;
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .container { padding: 15px 10px; border-radius: 16px; }
+      h1 { font-size: 1.4rem; }
+      .subtitle { font-size: 0.75rem; }
+      .floor-plan { border-radius: 12px; }
+      .floor-plan-svg { max-height: 50vh; }
+      .floor-plan-svg .table-text { font-size: 14px !important; }
+      .floor-plan-svg .room-label { font-size: 10px !important; }
+      .hall-tab { padding: 6px 14px; font-size: 0.75rem; }
+      .modal-card { padding: 20px 15px; }
+      .modal-card input, .modal-card select, .modal-card textarea { padding: 12px; font-size: 1rem; }
+      .modal-card input[type="date"] { padding: 12px; font-size: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 10px 8px; }
+      h1 { font-size: 1.2rem; }
+      .floor-plan-svg .table-text { font-size: 11px !important; }
+      .floor-plan-svg .room-label { font-size: 8px !important; }
+      .hall-tab { padding: 5px 10px; font-size: 0.65rem; }
+      .modal-card { padding: 15px 12px; }
+      .modal-card .btn { font-size: 0.8rem; padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -186,7 +473,7 @@ function toggleThemeZal() {
 })();
 
 // ============================================================
-//  ЗАЛЫ С CSS-КЛАССАМИ
+//  ГЕНЕРАЦИЯ ВРЕМЕНИ
 // ============================================================
 function generateTimeOptions() {
   let opts = '';
@@ -198,6 +485,9 @@ function generateTimeOptions() {
   return opts;
 }
 
+// ============================================================
+//  ГЕНЕРАЦИЯ СТОЛОВ
+// ============================================================
 function genTable(id, type, x, y, w, h, seats, color='#22c55e', room='', customText='') {
   const cx = x + w/2, cy = y + h/2;
   let shape = '';
@@ -213,13 +503,16 @@ function genTable(id, type, x, y, w, h, seats, color='#22c55e', room='', customT
   return `<g class="table-shape" data-table="${id}">${shape}<text x="${cx}" y="${cy+6}" class="table-text text-table">${text}</text>${label}</g>`;
 }
 
+// ============================================================
+//  ЗАЛЫ
+// ============================================================
 const halls = {
   hall1: {
     name: 'Зал 1 этаж',
     svg: `<svg class="floor-plan-svg" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
       <rect width="1000" height="800" rx="12" class="bg-main"/>
       
-      <!-- ===== КОЛОННЫ (буква К перед номером стола) ===== -->
+      <!-- ===== КОЛОННЫ ===== -->
       <rect x="95" y="110" width="40" height="40" rx="4" class="bg-accent"/><text x="115" y="135" class="room-label text-label" text-anchor="middle">К</text>
       <rect x="240" y="110" width="40" height="40" rx="4" class="bg-accent"/><text x="260" y="135" class="room-label text-label" text-anchor="middle">К</text>
       <rect x="430" y="110" width="40" height="40" rx="4" class="bg-accent"/><text x="450" y="135" class="room-label text-label" text-anchor="middle">К</text>
@@ -235,15 +528,15 @@ const halls = {
       <!-- ===== WC ===== -->
       <rect x="790" y="50" width="60" height="60" rx="6" class="bg-accent"/><text x="820" y="90" class="room-label text-label" text-anchor="middle">WC</text>
       
-      <!-- ===== ДЕТСКАЯ КОМНАТА (поднята выше) ===== -->
+      <!-- ===== ДЕТСКАЯ ===== -->
       <rect x="890" y="350" width="60" height="400" rx="6" class="bg-accent"/><text x="920" y="550" class="room-label text-label" text-anchor="middle" writing-mode="vertical-rl">ДЕТСК</text>
       
-      <!-- ===== ВХОД (по центру квадрата) ===== -->
+      <!-- ===== ВХОД ===== -->
       <rect x="90" y="670" width="80" height="40" rx="8" class="bg-secondary" stroke="#888" stroke-width="2" class="stroke-light"/><text x="130" y="696" class="room-label text-label-light" text-anchor="middle">ВХОД</text>
       
-      <!-- ===== СЦЕНА (круглая) ===== -->
-<circle cx="450" cy="320" r="50" class="ellipse-stage" stroke="#555" stroke-width="1.5" stroke-dasharray="4,4"/>
-<text x="430" y="326" class="room-label text-label" text-anchor="middle">СЦЕНА</text>
+      <!-- ===== СЦЕНА ===== -->
+      <circle cx="450" cy="320" r="50" class="ellipse-stage" stroke="#555" stroke-width="1.5" stroke-dasharray="4,4"/>
+      <text x="430" y="326" class="room-label text-label" text-anchor="middle">СЦЕНА</text>
       
       <!-- ===== СТОЛЫ ===== -->
       ${genTable(1,'rect_h',290,690,90,35,8)} ${genTable(2,'rect_h',490,690,90,35,8)} ${genTable(3,'rect_h',690,690,90,35,8)}
@@ -300,10 +593,10 @@ const halls = {
       ${genTable(64,'round',75,585,50,50,4)} ${genTable(65,'round',145,595,55,55,6)} ${genTable(66,'round',215,585,50,50,4)}
       ${genTable(63,'round',55,685,50,50,2)} ${genTable(62,'round',140,700,50,50,2)} ${genTable(61,'round',230,700,50,50,2)}
       
-      <!-- ===== ПАНОРАМА (чуть ниже) ===== -->
+      <!-- ===== ПАНОРАМА ===== -->
       <text x="170" y="535" class="room-label text-label-light" text-anchor="middle">Панорама в зал</text>
       
-      <!-- ===== ҚҰДАЛЫҚ (ниже и левее) ===== -->
+      <!-- ===== ҚҰДАЛЫҚ ===== -->
       <text x="275" y="520" class="room-label text-label-light" text-anchor="start">Құдалық</text>
     </svg>`
   }
@@ -312,6 +605,9 @@ const halls = {
 let currentHall = 'hall1';
 let selectedTable = null;
 
+// ============================================================
+//  ЗАГРУЗКА ЗАЛА
+// ============================================================
 function loadHall(hallId) {
   currentHall = hallId;
   document.querySelectorAll('.hall-tab').forEach(t => t.classList.remove('active'));
@@ -326,16 +622,26 @@ function loadHall(hallId) {
   });
 }
 
+// ============================================================
+//  ОТКРЫТИЕ МОДАЛКИ БРОНИ
+// ============================================================
 function openBookingModal(tableId) {
   const overlay = document.getElementById('modalOverlay');
   const card = document.getElementById('modalCard');
   const timeOpts = generateTimeOptions();
+  
+  // Определяем город для отображения
+  const cityName = localStorage.getItem('sandyq_city') === 'astana' ? 'Астана' : 'Алматы';
+  const cityAddress = localStorage.getItem('sandyq_city') === 'astana' 
+    ? 'Сарайшык 34/3' 
+    : 'Абылайхана 55 / Алимжанова 55';
+  
   card.innerHTML = `
     <h3>Стол №${tableId}</h3>
     <div class="table-number">№${tableId}</div>
     <img src="Стол №${tableId}.jpg" alt="Фото стола №${tableId}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
     <div class="placeholder-text" style="display:none;">🖼️ Фото не найдено</div>
-    <p class="table-info">🏛️ ${halls[currentHall].name} | 📍 Алматы, Абылайхана 55</p>
+    <p class="table-info">🏛️ ${halls[currentHall].name} | 📍 ${cityName}, ${cityAddress}</p>
     <input type="text" id="bookSurname" placeholder="Фамилия">
     <input type="text" id="bookName" placeholder="Имя">
     <input type="tel" id="bookPhone" placeholder="Телефон">
@@ -365,6 +671,9 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// ============================================================
+//  СОХРАНЕНИЕ БРОНИ В ОБЛАКО
+// ============================================================
 async function saveBookingToCloud(booking) {
   try {
     const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
@@ -379,6 +688,9 @@ async function saveBookingToCloud(booking) {
   } catch(e) { console.warn('Ошибка сохранения брони в облако:', e); }
 }
 
+// ============================================================
+//  ОТПРАВКА БРОНИ
+// ============================================================
 async function submitBooking() {
   const surname = document.getElementById('bookSurname').value.trim();
   const name = document.getElementById('bookName').value.trim();
@@ -395,6 +707,9 @@ async function submitBooking() {
   
   const fullName = `${surname} ${name}`;
   const hallName = halls[currentHall].name;
+  const city = localStorage.getItem('sandyq_city') || 'almaty';
+  const cityName = city === 'astana' ? 'Астана' : 'Алматы';
+  const cityAddress = city === 'astana' ? 'Сарайшык 34/3' : 'Абылайхана 55 / Алимжанова 55';
   
   const booking = {
     id: Date.now(),
@@ -407,7 +722,8 @@ async function submitBooking() {
     date: date,
     time: time || '—',
     special: comment || '',
-    restaurant: 'Sandyq Алматы, Абылайхана 55',
+    city: city,
+    restaurant: `Sandyq ${cityName}, ${cityAddress}`,
     timestamp: new Date().toISOString()
   };
   
@@ -417,7 +733,7 @@ async function submitBooking() {
   
   await saveBookingToCloud(booking);
   
-  const msg = `📅 <b>БРОНИРОВАНИЕ СТОЛА</b>\n🍽️ Sandyq Алматы, Абылайхана 55\n🏛️ ${hallName}\n🪑 Стол №${selectedTable}\n\n👤 ${fullName}\n📞 ${phone}\n👥 ${guests||'—'} персон\n📅 ${date}\n⏰ ${time||'—'}${comment?`\n💬 ${comment}`:''}`;
+  const msg = `📅 <b>БРОНИРОВАНИЕ СТОЛА</b>\n🍽️ Sandyq ${cityName}, ${cityAddress}\n🏛️ ${hallName}\n🪑 Стол №${selectedTable}\n\n👤 ${fullName}\n📞 ${phone}\n👥 ${guests||'—'} персон\n📅 ${date}\n⏰ ${time||'—'}${comment?`\n💬 ${comment}`:''}`;
   
   try {
     await fetch(`${TELEGRAM_API}/sendMessage`, {
@@ -438,6 +754,9 @@ async function submitBooking() {
   showToast('✅ Бронирование отправлено!');
 }
 
+// ============================================================
+//  ИНИЦИАЛИЗАЦИЯ
+// ============================================================
 document.querySelectorAll('.hall-tab').forEach(btn => btn.addEventListener('click', () => loadHall(btn.dataset.hall)));
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
