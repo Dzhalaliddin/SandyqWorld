@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Админ-панель — Sandyq Алматы</title>
+  <title>Админ-панель — Sandyq</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ТЕМЫ В АДМИНКЕ ===== */
+    /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ АДМИНКИ ===== */
     .theme-btn-admin {
       width: 38px;
       height: 38px;
@@ -39,13 +39,652 @@
       align-items: center;
       gap: 10px;
     }
+    
+    /* ===== АДМИН ПАНЕЛЬ ===== */
+    .login-box {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+      width: 380px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    body.light-theme .login-box {
+      background: rgba(255,248,240,0.95);
+      border-color: rgba(0,0,0,0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+    body.light-theme .login-box h1 { color: #c49a2a; }
+    body.light-theme .login-box p { color: #555; }
+    body.light-theme .login-box input {
+      background: rgba(255,255,255,0.8);
+      border-color: rgba(0,0,0,0.15);
+      color: #2a1508;
+    }
+    body.light-theme .login-box input:focus {
+      border-color: #c49a2a;
+      box-shadow: 0 0 15px rgba(196,154,42,0.2);
+    }
+    .login-box h1 { font-size: 2rem; margin-bottom: 10px; color: #f7971e; font-family: 'Playfair Display', serif; }
+    .login-box input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .login-box input:focus { border-color: #f7971e; }
+    .login-box button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      background: linear-gradient(135deg, #f7971e, #e67e22);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .login-box button:hover { box-shadow: 0 8px 25px rgba(247,151,30,0.5); }
+    body.light-theme .login-box button {
+      background: linear-gradient(135deg, #c49a2a, #a88820);
+    }
+    .error { color: #e74c3c; margin-top: 10px; display: none; }
+
+    .admin-panel { display: none; width: 100%; max-width: 1400px; padding: 30px; }
+    body.light-theme .admin-panel h1 { color: #2a1508; }
+    body.light-theme .admin-panel .admin-header > div p { color: #666; }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .admin-nav a, .admin-nav button {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .admin-nav a:hover, .admin-nav button:hover { background: rgba(255,255,255,0.1); }
+    .admin-nav a.active { background: #f7971e; color: white; border-color: #f7971e; }
+    body.light-theme .admin-nav a,
+    body.light-theme .admin-nav button {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.12);
+      color: #2a1508;
+    }
+    body.light-theme .admin-nav a:hover,
+    body.light-theme .admin-nav button:hover {
+      background: rgba(255,255,255,0.9);
+      border-color: rgba(0,0,0,0.2);
+    }
+    body.light-theme .admin-nav a.active {
+      background: #c49a2a;
+      color: white;
+      border-color: #c49a2a;
+    }
+    body.light-theme .admin-nav a.active:hover {
+      background: #a88820;
+    }
+
+    .logout-btn { background: #e74c3c !important; border: none !important; }
+    body.light-theme .logout-btn {
+      background: #e74c3c !important;
+      color: white !important;
+    }
+    body.light-theme .logout-btn:hover {
+      background: #c0392b !important;
+    }
+
+    .back-link {
+      color: #f7971e;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .back-link {
+      color: #c49a2a;
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.12);
+    }
+    body.light-theme .back-link:hover {
+      background: rgba(255,255,255,0.9);
+    }
+
+    .total-orders {
+      background: rgba(255,255,255,0.05);
+      padding: 12px 24px;
+      border-radius: 18px;
+      transition: background 0.3s ease;
+      color: #fff;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+    }
+    body.light-theme .total-orders {
+      background: rgba(255,255,255,0.7);
+      color: #2a1508;
+    }
+    body.light-theme .total-orders span { color: #c49a2a; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    body.light-theme .stat-card {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .stat-value { font-size: 1.8rem; font-weight: 800; color: #f7971e; font-family: 'Playfair Display', serif; }
+    body.light-theme .stat-value { color: #c49a2a; }
+    .stat-label {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.3s ease;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .stat-label { color: rgba(0,0,0,0.5); }
+
+    .chart-container {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 30px;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    body.light-theme .chart-container {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 200px;
+      padding: 10px 0;
+    }
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, #f7971e, #e67e22);
+      border-radius: 6px 6px 0 0;
+      min-width: 25px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    body.light-theme .chart-bar {
+      background: linear-gradient(180deg, #c49a2a, #a88820);
+    }
+    .chart-bar:hover { opacity: 0.8; transform: scaleY(1.02); }
+    .chart-bar-value {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #f7971e;
+      white-space: nowrap;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .chart-bar-value { color: #c49a2a; }
+    .chart-bar-label {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .chart-bar-label { color: rgba(0,0,0,0.4); }
+
+    .dishes-stats {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 30px;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    body.light-theme .dishes-stats {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .dish-stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: border-color 0.3s ease;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .dish-stat-row { 
+      border-bottom-color: rgba(0,0,0,0.06);
+      color: #2a1508;
+    }
+    body.light-theme .dish-stat-row span { color: #2a1508; }
+    .dish-stat-qty { font-weight: 700; color: #f7971e; }
+    body.light-theme .dish-stat-qty { color: #c49a2a; }
+
+    .date-filter {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .date-filter input, .date-filter select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      color-scheme: dark;
+      font-size: 0.9rem;
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .date-filter input,
+    body.light-theme .date-filter select {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.12);
+      color: #2a1508;
+    }
+    .date-filter input:focus, .date-filter select:focus { border-color: #f7971e; outline: none; }
+    body.light-theme .date-filter input:focus,
+    body.light-theme .date-filter select:focus { border-color: #c49a2a; }
+    .date-filter label {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .date-filter label { color: rgba(0,0,0,0.4); }
+
+    .order-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-left: 3px solid #f7971e;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+      color: #fff;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .order-card {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.08);
+      border-left-color: #c49a2a;
+      color: #2a1508;
+    }
+    .order-card:hover { transform: translateX(4px); border-color: rgba(247,151,30,0.3); }
+    body.light-theme .order-card:hover { border-color: rgba(196,154,42,0.3); }
+
+    .booking-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-left: 3px solid #3498db;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+      color: #fff;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .booking-card {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.08);
+      border-left-color: #2980b9;
+      color: #2a1508;
+    }
+    .booking-card:hover { transform: translateX(4px); border-color: rgba(52,152,219,0.3); }
+
+    .order-total {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f7971e;
+      text-align: right;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    body.light-theme .order-total {
+      color: #c49a2a;
+      border-top-color: rgba(0,0,0,0.06);
+    }
+
+    .city-tag {
+      display: inline-block;
+      background: #2ecc71;
+      color: white;
+      padding: 1px 10px;
+      border-radius: 12px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: white;
+      transition: all 0.3s;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .btn-print { background: #9b59b6; }
+    .btn-pdf { background: #e67e22; }
+    .btn-delete { background: #e74c3c; }
+    .btn-refresh { background: #2ecc71; }
+    .btn-preorder { background: #3498db; }
+    .btn-excel { background: #217346; }
+    .btn-sync { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .btn-edit { background: #f39c12; }
+
+    .empty-orders {
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+      padding: 50px;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+      transition: color 0.3s ease;
+    }
+    body.light-theme .empty-orders { color: rgba(0,0,0,0.3); }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 25px 0 15px;
+      color: #f7971e;
+      transition: color 0.3s ease;
+    }
+    body.light-theme .section-title { color: #c49a2a; }
+
+    .booking-stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .booking-stats-table th, .booking-stats-table td {
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease, color 0.3s ease;
+      color: #fff;
+    }
+    body.light-theme .booking-stats-table th,
+    body.light-theme .booking-stats-table td {
+      border-color: rgba(0,0,0,0.06);
+      color: #2a1508;
+    }
+    .booking-stats-table th {
+      background: rgba(247,151,30,0.2);
+      color: #f7971e;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    body.light-theme .booking-stats-table th {
+      background: rgba(196,154,42,0.15);
+      color: #c49a2a;
+    }
+
+    .sync-status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem;
+      z-index: 100;
+      display: none;
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      color: #fff;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .sync-status {
+      background: rgba(255,248,240,0.9);
+      border-color: rgba(0,0,0,0.1);
+      color: #2a1508;
+    }
+    .sync-status.show { display: block; }
+    .sync-status.success { border-color: #2ecc71; }
+    .sync-status.error { border-color: #e74c3c; }
+    body.light-theme .sync-status.success { border-color: #27ae60; }
+    body.light-theme .sync-status.error { border-color: #c0392b; }
+
+    /* ===== РЕДАКТИРОВАНИЕ ЗАКАЗА ===== */
+    .modal-edit .modal-content { max-width: 800px; }
+    .edit-item-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-wrap: wrap;
+    }
+    body.light-theme .edit-item-row { border-bottom-color: rgba(0,0,0,0.05); }
+    .edit-item-row select, .edit-item-row input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.85rem;
+      flex: 1;
+      min-width: 100px;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .edit-item-row select,
+    body.light-theme .edit-item-row input {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.12);
+      color: #2a1508;
+    }
+    .edit-item-row .btn-sm { padding: 4px 12px; font-size: 0.75rem; }
+    .btn-add-item { background: #2ecc71; color: #fff; }
+    .btn-remove-item { background: #e74c3c; color: #fff; }
+    .btn-save-order { background: #f7971e; color: #fff; }
+    body.light-theme .btn-save-order { background: #c49a2a; }
+
+    /* ===== МОДАЛКА ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      z-index: 300;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+    .modal.open { display: flex; }
+    .modal-content {
+      background: rgba(20,20,40,0.96);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255,255,255,0.08);
+      max-width: 600px;
+      width: 100%;
+      border-radius: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    @keyframes modalIn {
+      from { transform: translateY(30px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    body.light-theme .modal-content {
+      background: rgba(255,248,240,0.98);
+      border-color: rgba(0,0,0,0.06);
+    }
+    .modal-header {
+      padding: 16px 22px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 20px 20px 0 0;
+    }
+    .modal-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    body.light-theme .modal-header h2 { color: #2a1508; }
+    .close-modal {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .close-modal:hover { color: #e74c3c; transform: rotate(90deg); }
+    .modal-body { padding: 20px; }
+    .modal-body label {
+      color: rgba(255,255,255,0.6);
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+    }
+    body.light-theme .modal-body label { color: rgba(0,0,0,0.6); }
+    .modal-body input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    body.light-theme .modal-body input {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.08);
+      color: #2a1508;
+    }
+    .modal-body input:focus { outline: none; border-color: #f7971e; }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-secondary {
+      padding: 8px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+    body.light-theme .btn-secondary {
+      color: #2a1508;
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.08);
+    }
+    body.light-theme .btn-secondary:hover { background: rgba(0,0,0,0.08); }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .login-box { width: 90%; padding: 30px; }
+      .admin-panel { padding: 15px; }
+      .admin-nav a, .admin-nav button { padding: 8px 12px; font-size: 0.75rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .chart-bars { height: 140px; }
+      .edit-item-row { flex-direction: column; align-items: stretch; }
+      .edit-item-row select, .edit-item-row input { min-width: auto; }
+    }
+    @media (max-width: 480px) {
+      .admin-nav { gap: 5px; }
+      .admin-nav a, .admin-nav button { padding: 6px 10px; font-size: 0.7rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .chart-bars { height: 100px; gap: 3px; }
+    }
   </style>
 </head>
 <body>
 
 <div class="login-box" id="login-screen">
   <h1>🔐 Sandyq Admin</h1>
-  <p style="opacity:0.6;margin-bottom:20px">Введите пароль</p>
+  <p style="opacity:0.6;margin-bottom:20px;font-family:'Roboto','Segoe UI',sans-serif;">Введите пароль</p>
   <input type="password" id="password" placeholder="Пароль" onkeydown="if(event.key==='Enter')checkPassword()">
   <button onclick="checkPassword()">Войти</button>
   <p class="error" id="error">❌ Неверный пароль</p>
@@ -53,7 +692,7 @@
 
 <div class="admin-panel" id="admin-panel">
   <div class="admin-header">
-    <div><h1>📊 Sandyq Admin</h1><p style="opacity:0.6">📍 Алматы, Абылайхана 55</p></div>
+    <div><h1 style="font-family:'Playfair Display',serif;">📊 Sandyq Admin</h1><p style="opacity:0.6;font-family:'Roboto','Segoe UI',sans-serif;">📍 Алматы / Астана</p></div>
     <div class="top-controls">
       <button class="theme-btn-admin" onclick="toggleThemeAdmin()" id="theme-btn-admin">
         <i class="fas fa-moon" id="theme-icon-admin"></i>
@@ -76,7 +715,13 @@
   <div class="date-filter" id="date-filter-row">
     <label>📅 Дата:</label>
     <input type="date" id="filter-date" onchange="loadCurrentTab(this.value)">
-    <button class="btn btn-print" onclick="document.getElementById('filter-date').value='';loadCurrentTab()">Сбросить</button>
+    <label>🏙️ Город:</label>
+    <select id="filter-city" onchange="loadCurrentTab()">
+      <option value="all">Все города</option>
+      <option value="almaty">Алматы</option>
+      <option value="astana">Астана</option>
+    </select>
+    <button class="btn btn-refresh" onclick="document.getElementById('filter-date').value='';document.getElementById('filter-city').value='all';loadCurrentTab()">Сбросить</button>
   </div>
 
   <div class="date-filter" id="date-range-row" style="display:none">
@@ -113,7 +758,7 @@
         <label>Дата</label>
         <input type="date" id="edit-order-date">
       </div>
-      <h3 style="margin:15px 0 10px;">Позиции заказа</h3>
+      <h3 style="margin:15px 0 10px;font-family:'Playfair Display',serif;color:#f7971e;">Позиции заказа</h3>
       <div id="edit-items-container"></div>
       <div style="display:flex;gap:10px;margin-top:15px;flex-wrap:wrap;">
         <button class="btn btn-add-item" onclick="addEditItemRow()">➕ Добавить блюдо</button>
@@ -135,7 +780,7 @@ const JSONBIN_BIN_ID = '6a411873f5f4af5e293d0edd';
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
 // ============================================================
-//  ТЕМА ДЛЯ ADMIN
+//  ТЕМА
 // ============================================================
 function toggleThemeAdmin() {
   document.body.classList.toggle('light-theme');
@@ -145,7 +790,6 @@ function toggleThemeAdmin() {
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
 }
 
-// Синхронизация темы при загрузке
 (function() {
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-theme');
@@ -155,7 +799,7 @@ function toggleThemeAdmin() {
 })();
 
 // ============================================================
-//  АДМИН-СПЕЦИФИЧНЫЙ JS
+//  АВТОРИЗАЦИЯ
 // ============================================================
 const ADMIN_PASSWORD = 'Sandyq2024';
 let allOrders = [], allBookings = [], currentTab = 'orders';
@@ -178,6 +822,9 @@ if(localStorage.getItem('admin_logged_in')==='true'){
   loadAllData();
 }
 
+// ============================================================
+//  ЗАГРУЗКА ДАННЫХ
+// ============================================================
 async function loadAllData(){
   try {
     const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
@@ -225,6 +872,9 @@ function showSyncStatus(text, type) {
   if (type) { el._hide = setTimeout(() => el.classList.remove('show'), 4000); }
 }
 
+// ============================================================
+//  ВКЛАДКИ
+// ============================================================
 function loadCurrentTab(filterDate=''){
   document.getElementById('date-filter-row').style.display=currentTab==='stats'?'none':'flex';
   document.getElementById('date-range-row').style.display=currentTab==='stats'?'flex':'none';
@@ -242,9 +892,16 @@ function switchTab(tab){
   loadCurrentTab();
 }
 
+// ============================================================
+//  ЗАКАЗЫ
+// ============================================================
 function loadOrders(filterDate=''){
   let orders = allOrders;
   if(filterDate) orders = orders.filter(o => o.date === filterDate);
+  
+  const cityFilter = document.getElementById('filter-city')?.value || 'all';
+  if(cityFilter !== 'all') orders = orders.filter(o => o.city === cityFilter);
+  
   document.getElementById('orders-count').textContent = orders.length;
   showStats(orders, 'orders');
   showDishesStats(orders);
@@ -252,10 +909,12 @@ function loadOrders(filterDate=''){
   if(!orders.length){ list.innerHTML = '<div class="empty-orders"><p>Нет заказов</p></div>'; return; }
   list.innerHTML = '<div class="section-title">📋 Заказы</div>' + [...orders].reverse().map((o, idx) => {
     const ri = orders.length - 1 - idx;
+    const cityName = o.city === 'astana' ? 'Астана' : 'Алматы';
+    const cityTag = `<span class="city-tag">${cityName}</span>`;
     return `<div class="order-card">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
-        <div><b>#${String(o.id).slice(-6)}</b> 👤 ${o.guest?.name||'—'} 📞 ${o.guest?.phone||'—'}</div>
-        <div>📍 ${o.restaurant||'Алматы'} | 📅 ${o.date||'—'}</div>
+        <div><b>#${String(o.id).slice(-6)}</b> ${cityTag} 👤 ${o.guest?.name||'—'} 📞 ${o.guest?.phone||'—'}</div>
+        <div>📍 ${o.restaurant||'Sandyq'} | 📅 ${o.date||'—'}</div>
       </div>
       ${(o.items||[]).map(i => `<div style="display:flex;justify-content:space-between;padding:3px 0"><span>${i.name?.ru||'Блюдо'} ×${i.quantity||1}</span><span>${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</span></div>`).join('')}
       ${o.special ? `<div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin:6px 0;">💬 ${o.special}</div>` : ''}
@@ -273,6 +932,10 @@ function loadOrders(filterDate=''){
 function loadBookings(filterDate=''){
   let bookings = allBookings;
   if(filterDate) bookings = bookings.filter(b => b.date === filterDate);
+  
+  const cityFilter = document.getElementById('filter-city')?.value || 'all';
+  if(cityFilter !== 'all') bookings = bookings.filter(b => b.city === cityFilter);
+  
   document.getElementById('bookings-count').textContent = bookings.length;
   showStats(bookings, 'bookings');
   document.getElementById('dishes-stats').innerHTML = '';
@@ -280,8 +943,10 @@ function loadBookings(filterDate=''){
   if(!bookings.length){ list.innerHTML = '<div class="empty-orders"><p>Нет броней</p></div>'; return; }
   list.innerHTML = '<div class="section-title">📅 Бронирования</div>' + [...bookings].reverse().map((b, idx) => {
     const ri = bookings.length - 1 - idx;
+    const cityName = b.city === 'astana' ? 'Астана' : 'Алматы';
+    const cityTag = `<span class="city-tag">${cityName}</span>`;
     return `<div class="booking-card">
-      <div><b>🪑 Стол №${b.table}</b> 🏛️ ${b.hallName||b.hall||'—'} | 📅 ${b.date||'—'} ⏰ ${b.time||'—'}</div>
+      <div><b>🪑 Стол №${b.table}</b> ${cityTag} 🏛️ ${b.hallName||b.hall||'—'} | 📅 ${b.date||'—'} ⏰ ${b.time||'—'}</div>
       <p>👤 ${b.name||'—'} | 📞 ${b.phone||'—'} | 👥 ${b.guests||'—'} персон</p>
       ${b.special ? `<div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin:6px 0;">💬 ${b.special}</div>` : ''}
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
@@ -293,6 +958,9 @@ function loadBookings(filterDate=''){
   }).join('');
 }
 
+// ============================================================
+//  СТАТИСТИКА
+// ============================================================
 function loadStatsRange(){
   const from = document.getElementById('date-from').value;
   const to = document.getElementById('date-to').value;
@@ -302,6 +970,12 @@ function loadStatsRange(){
   let bookings = allBookings;
   if(from) bookings = bookings.filter(b => b.date >= from);
   if(to) bookings = bookings.filter(b => b.date <= to);
+  
+  const cityFilter = document.getElementById('filter-city')?.value || 'all';
+  if(cityFilter !== 'all') {
+    orders = orders.filter(o => o.city === cityFilter);
+    bookings = bookings.filter(b => b.city === cityFilter);
+  }
 
   const rev = orders.reduce((s,o) => s + (o.total||0), 0);
   const items = orders.reduce((s,o) => s + (o.items||[]).reduce((ss,i) => ss + (i.quantity||1), 0), 0);
@@ -351,14 +1025,23 @@ function getTopDishesHTML(orders){
   ).join('');
 }
 
+// ============================================================
+//  ЭКСПОРТ
+// ============================================================
 function exportToExcel(){
   const from = document.getElementById('date-from').value;
   const to = document.getElementById('date-to').value;
+  const cityFilter = document.getElementById('filter-city')?.value || 'all';
   let orders = allOrders;
   if(from) orders = orders.filter(o => o.date >= from);
   if(to) orders = orders.filter(o => o.date <= to);
-  let csv = '\uFEFFID;Дата;Гость;Телефон;Сумма;Позиций\n';
-  orders.forEach(o => { csv += `${o.id};${o.date};${o.guest?.name||''};${o.guest?.phone||''};${o.total||0};${(o.items||[]).length}\n`; });
+  if(cityFilter !== 'all') orders = orders.filter(o => o.city === cityFilter);
+  
+  let csv = '\uFEFFID;Дата;Город;Гость;Телефон;Сумма;Позиций\n';
+  orders.forEach(o => { 
+    const cityName = o.city === 'astana' ? 'Астана' : 'Алматы';
+    csv += `${o.id};${o.date};${cityName};${o.guest?.name||''};${o.guest?.phone||''};${o.total||0};${(o.items||[]).length}\n`; 
+  });
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -386,17 +1069,21 @@ function showDishesStats(orders){
     if(!map[k]) map[k] = {name:k, qty:0};
     map[k].qty += (i.quantity||1);
   }));
-  document.getElementById('dishes-stats').innerHTML = '<h4 style="margin-bottom:15px">📊 Популярность блюд</h4>' + 
+  document.getElementById('dishes-stats').innerHTML = '<h4 style="margin-bottom:15px;font-family:Playfair Display,serif;color:#f7971e;">📊 Популярность блюд</h4>' + 
     Object.values(map).sort((a,b) => b.qty - a.qty).map(d => 
       `<div class="dish-stat-row"><span>${d.name}</span><span class="dish-stat-qty">×${d.qty}</span></div>`
     ).join('');
 }
 
+// ============================================================
+//  ПЕЧАТЬ И PDF
+// ============================================================
 function printOrder(idx){
   const o = allOrders[idx];
   if(!o) return;
   const w = window.open('','','width=850,height=700');
-  w.document.write(`<html><body style="font-family:Georgia;padding:40px"><div style="border:3px solid #c49a2a;padding:30px"><h1>🍽️ SANDYQ</h1><p>👤 ${o.guest?.name} | 📞 ${o.guest?.phone} | 📅 ${o.date}</p><table style="width:100%;border-collapse:collapse">${(o.items||[]).map(i => `<tr><td>${i.name?.ru}</td><td>×${i.quantity}</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><p style="text-align:right;font-size:18px;color:#8B6914"><b>💰 ${(o.total||0).toLocaleString()}₸</b></p></div><script>window.onload=function(){window.print()}<\/script></body></html>`);
+  const cityName = o.city === 'astana' ? 'Астана' : 'Алматы';
+  w.document.write(`<html><body style="font-family:Georgia;padding:40px"><div style="border:3px solid #c49a2a;padding:30px"><h1>🍽️ SANDYQ</h1><p>📍 ${o.restaurant||'Sandyq'}</p><p>👤 ${o.guest?.name} | 📞 ${o.guest?.phone} | 📅 ${o.date}</p><table style="width:100%;border-collapse:collapse">${(o.items||[]).map(i => `<tr><td>${i.name?.ru}</td><td>×${i.quantity}</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><p style="text-align:right;font-size:18px;color:#8B6914"><b>💰 ${(o.total||0).toLocaleString()}₸</b></p></div><script>window.onload=function(){window.print()}<\/script></body></html>`);
   w.document.close();
 }
 
@@ -405,15 +1092,16 @@ function downloadOrderPDF(idx){ printOrder(idx); }
 function downloadBookingPDF(idx){
   const b = allBookings[idx];
   if(!b) return;
+  const cityName = b.city === 'astana' ? 'Астана' : 'Алматы';
   const w = window.open('','','width=700,height=500');
-  w.document.write(`<html><body style="font-family:Georgia;padding:40px"><div style="border:3px solid #3498db;padding:30px"><h1>📅 БРОНИРОВАНИЕ</h1><p>Стол №${b.table} | ${b.hallName||b.hall||'—'}</p><p>👤 ${b.name} | 📞 ${b.phone} | 👥 ${b.guests} | 📅 ${b.date} ⏰ ${b.time}</p></div><script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.write(`<html><body style="font-family:Georgia;padding:40px"><div style="border:3px solid #3498db;padding:30px"><h1>📅 БРОНИРОВАНИЕ</h1><p>📍 ${b.restaurant||'Sandyq'}</p><p>Стол №${b.table} | ${b.hallName||b.hall||'—'}</p><p>👤 ${b.name} | 📞 ${b.phone} | 👥 ${b.guests} | 📅 ${b.date} ⏰ ${b.time}</p></div><script>window.onload=function(){window.print()}<\/script></body></html>`);
   w.document.close();
 }
 
 function downloadAllPDF(){
   if(!allOrders.length) return alert('Нет заказов');
   const w = window.open('','','width=900,height=700');
-  w.document.write(`<html><body style="font-family:Georgia;padding:30px"><h1>🍽️ SANDYQ — Все заказы</h1>${[...allOrders].reverse().map(o => `<div style="border:1px solid #ccc;padding:10px;margin:10px 0"><b>#${String(o.id).slice(-6)}</b> 👤 ${o.guest?.name} 📅 ${o.date} 💰 ${(o.total||0).toLocaleString()}₸</div>`).join('')}</body></html>`);
+  w.document.write(`<html><body style="font-family:Georgia;padding:30px"><h1>🍽️ SANDYQ — Все заказы</h1>${[...allOrders].reverse().map(o => `<div style="border:1px solid #ccc;padding:10px;margin:10px 0"><b>#${String(o.id).slice(-6)}</b> ${o.city==='astana'?'Астана':'Алматы'} 👤 ${o.guest?.name} 📅 ${o.date} 💰 ${(o.total||0).toLocaleString()}₸</div>`).join('')}</body></html>`);
   w.document.close();
   setTimeout(() => w.print(), 500);
 }
@@ -459,40 +1147,20 @@ function renderEditItems(items){
 }
 
 function getAllMenuItemsOptions(selected){
-  let options = '';
-  const menuDataLocal = {
-    salads: { items: [{ name: { ru: 'Салат из свежих овощей' }, price: 3390 }, { name: { ru: 'Салат «Костұра»' }, price: 5590 }] },
-    main: { items: [{ name: { ru: '«Қазақ ет» (Бешбармақ)' }, price: 7990 }, { name: { ru: '«Борша ет»' }, price: 8890 }] }
-  };
-  // Простой вариант — добавь все блюда из menuData
   const allItems = [
-    { name: 'Салат из свежих овощей', price: 3390 },
-    { name: 'Салат «Костұра»', price: 5590 },
-    { name: 'Салат «Сандық»', price: 5590 },
-    { name: 'Баклажаны в соусе из курта', price: 4490 },
-    { name: 'Ассорти овощей', price: 5590 },
-    { name: '«Қазақ ет» (Бешбармақ)', price: 7990 },
-    { name: '«Борша ет»', price: 8890 },
-    { name: '«Бал қуырдақ»', price: 7790 },
-    { name: '«Ши қуырдақ»', price: 7790 },
-    { name: '«Бұқпа»', price: 8890 },
-    { name: '«Қымыз қабырға»', price: 8890 },
-    { name: '«Қақталған қазы»', price: 8890 },
-    { name: 'Горная форель', price: 7290 },
-    { name: '«Нан салма»', price: 6690 },
-    { name: '«Борша ет» Шоу', price: 27990 },
-    { name: 'Томленая шея баранины Шоу', price: 28990 },
-    { name: 'Бауырсаки', price: 2290 },
-    { name: '«Сый табақ» (5-6)', price: 72990 },
-    { name: '«Той табақ» (5-6)', price: 72990 },
-    { name: '«Хан сырбаз» (5-6)', price: 105990 },
-    { name: '«Қарын көмбе» (5-6)', price: 99990 },
-    { name: '«Бел көтерер» (5-6)', price: 99990 },
-    { name: '«Бекіре» (5-6)', price: 105990 }
+    'Салат из свежих овощей','Салат «Костұра»','Салат «Сандық»','Баклажаны в соусе из курта','Ассорти овощей',
+    '«Құйрық май» с кумысом','«Шеке»','«Жілік май»','«Ұйқы ашар»','«Құйрық бауыр»','«Үлпершек»','Ми Палау','Осетровая икра',
+    'Суп «Жібек жолы»','Коже «Nomad»','Суп из индейки','Суп из перепелки','«Жарма көже»','«Көл кеспе»',
+    '«Қазақ ет» (Бешбармақ)','«Борша ет» на камнях','«Бал қуырдақ»','«Ши қуырдақ»','«Бұқпа» из говядины','«Қымыз қабырға»','Томленая шея баранины','«Қақталған қазы»','Горная форель','«Нан салма»',
+    '«Сый табақ» (5-6)','«Той табақ» (5-6)','«Қарын көмбе» (5-6)','«Бел көтерер» (5-6)','«Хан сырбаз» (5-6)','«Бекіре» (5-6)',
+    'Бауырсаки с вареньем','Баурсаки с сыром','«Мыжыма»','«Бәрәміш»','«Таба нан»','«Қаттама»','«Нан астау»',
+    '«Чизкейк» из тары','Финик с орехами','Сладости «Сандық»','Десерт «Сүмесүт»','Хрустящий пирог','«Төңкерме»','«Майсөк»','«Алматинский апорт»','Мороженое',
+    'Шубат','Шалап','Кумыс','Кус-кус','Булгур','Молодой картофель'
   ];
-  allItems.forEach(item => {
-    const selectedAttr = item.name === selected ? 'selected' : '';
-    options += `<option value="${item.name}" ${selectedAttr} data-price="${item.price}">${item.name}</option>`;
+  let options = '';
+  allItems.forEach(name => {
+    const selectedAttr = name === selected ? 'selected' : '';
+    options += `<option value="${name}" ${selectedAttr}>${name}</option>`;
   });
   return options;
 }
@@ -513,14 +1181,6 @@ function addEditItemRow(){
     <button class="btn btn-remove-item btn-sm" onclick="removeEditItem(${idx})">✕</button>
   `;
   container.appendChild(row);
-  
-  const select = row.querySelector('.edit-item-select');
-  select.addEventListener('change', function(){
-    const opt = this.options[this.selectedIndex];
-    const price = opt.dataset.price || 0;
-    const priceInput = this.closest('.edit-item-row').querySelector('.edit-item-price');
-    if(priceInput) priceInput.value = price;
-  });
 }
 
 function removeEditItem(idx){
