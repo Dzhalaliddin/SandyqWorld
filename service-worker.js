@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sandyq-v1';
+const CACHE_NAME = 'sandyq-v2';
 const urlsToCache = [
   '/',
   '/index.html',
