@@ -64,15 +64,12 @@
   </div>
 </div>
 
-<!-- ===== КАТЕГОРИИ (ФИКСИРОВАННЫЕ, В 2 РЯДА) ===== -->
+<!-- ===== КАТЕГОРИИ ===== -->
 <div class="categories-wrapper" id="categoriesWrapper">
   <nav class="main-nav" id="mainNav">
     <div class="categories-nav" id="categories-nav">
       <div class="categories-drop" id="categories-drop"></div>
     </div>
-    <button class="mobile-back-btn" id="mobile-back-btn" onclick="showCategoryCards()">
-      <i class="fas fa-arrow-left"></i> <span data-lang-key="back">Назад к категориям</span>
-    </button>
     <div class="mobile-cat-cards" id="mobile-cat-cards"></div>
   </nav>
 </div>
@@ -93,7 +90,7 @@
 <main>
   <div class="menu-container">
 
-    <!-- ===== ПАРАЛЛАКС БАНЕР ===== -->
+    <!-- ===== БАНЕР ===== -->
     <div class="parallax-section" id="banner-section">
       <div class="parallax-bg" id="parallax-bg"></div>
       <div class="parallax-content">
@@ -131,7 +128,10 @@
     <div class="cart-content" id="cart-content"></div>
     <div class="cart-footer">
       <div class="cart-summary" id="cart-summary"></div>
-      <div class="total-sum" id="total-sum">Итого: 0 ₸</div>
+      <div class="oferta-checkbox">
+        <input type="checkbox" id="oferta-agree">
+        <label for="oferta-agree">Нажимая на оформить заказ вы соглашаетесь с  <a href="#" onclick="document.getElementById('oferta-modal').classList.add('open'); return false;">договором публичной оферты</a></label>
+      </div>
       <button class="checkout-btn" onclick="openCheckout()" data-lang-key="checkout_btn">🌟 Оформить заказ</button>
     </div>
   </div>
@@ -147,9 +147,11 @@
         <h3 style="margin-bottom:10px;" data-lang-key="serving_time">⏰ Время подачи</h3>
         <div class="time-schedule" id="time-schedule"></div>
         <div class="form-group"><label data-lang-key="special_requests">Особые пожелания</label><textarea id="special-requests" rows="2"></textarea></div>
-        <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:10px;" data-lang-key="working_hours">
-          🕐 Кухня: 12:00–23:00 | Колл-центр: 10:00–22:00
-        </p>
+        <div class="oferta-checkbox-modal">
+          <input type="checkbox" id="oferta-agree-modal">
+          <label for="oferta-agree-modal">Нажимая на оформить заказ вы соглашаетесь с <a href="#" onclick="document.getElementById('oferta-modal').classList.add('open'); return false;">договором публичной оферты</a></label>
+        </div>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:10px;" data-lang-key="working_hours">🕐 Кухня: 12:00–23:00 | Колл-центр: 10:00–22:00</p>
       </div>
       <div class="modal-footer">
         <button class="btn-secondary" onclick="closeCheckout()" data-lang-key="cancel">Отмена</button>
@@ -261,9 +263,7 @@
   <div class="footer-bottom">
     <p>
       <span data-lang-key="copyright">© 2026 Sandyq. Все права защищены.</span>
-      <a href="#" onclick="document.getElementById('oferta-modal').classList.add('open'); return false;" style="color:rgba(255,255,255,0.3);text-decoration:none;margin-left:15px;font-size:0.7rem;" data-lang-key="oferta">
-        📄 Договор оферты
-      </a>
+      <a href="#" onclick="document.getElementById('oferta-modal').classList.add('open'); return false;" style="color:rgba(255,255,255,0.3);text-decoration:none;margin-left:15px;font-size:0.7rem;" data-lang-key="oferta">📄 Договор оферты</a>
     </p>
   </div>
 </footer>
