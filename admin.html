@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ АДМИНКИ ===== */
     .theme-btn-admin {
       width: 38px;
       height: 38px;
@@ -40,7 +39,6 @@
       gap: 10px;
     }
     
-    /* ===== АДМИН ПАНЕЛЬ ===== */
     .login-box {
       background: rgba(255,255,255,0.03);
       backdrop-filter: blur(20px);
@@ -512,7 +510,6 @@
     body.light-theme .sync-status.success { border-color: #27ae60; }
     body.light-theme .sync-status.error { border-color: #c0392b; }
 
-    /* ===== РЕДАКТИРОВАНИЕ ЗАКАЗА ===== */
     .modal-edit .modal-content { max-width: 800px; }
     .edit-item-row {
       display: flex;
@@ -546,7 +543,6 @@
     .btn-save-order { background: #f7971e; color: #fff; }
     body.light-theme .btn-save-order { background: #c49a2a; }
 
-    /* ===== МОДАЛКА ===== */
     .modal {
       display: none;
       position: fixed;
@@ -700,8 +696,8 @@
       <a href="index.html" class="back-link">← На сайт</a>
     </div>
     <div class="admin-nav">
-      <button class="btn-refresh" onclick="loadAllData()" title="Обновить">🔄</button>
-      <button class="btn-sync" onclick="syncWithCloud()" title="Синхронизировать с облаком">☁️</button>
+      <button class="btn-refresh" onclick="loadAllData()" title="Обновить из облака">🔄</button>
+      <button class="btn-sync" onclick="syncWithCloud()" title="Сохранить изменения в облако">☁️</button>
       <a href="#" onclick="switchTab('orders');return false" class="active" id="tab-orders">📋 Заказы</a>
       <a href="#" onclick="switchTab('bookings');return false" id="tab-bookings">📅 Брони</a>
       <a href="#" onclick="switchTab('stats');return false" id="tab-stats">📊 Статистика</a>
@@ -801,7 +797,7 @@ function toggleThemeAdmin() {
 // ============================================================
 //  АВТОРИЗАЦИЯ
 // ============================================================
-const ADMIN_PASSWORD = 'Sandyq2024';
+const ADMIN_PASSWORD = 'Sandyq2026';
 let allOrders = [], allBookings = [], currentTab = 'orders';
 let editingOrderIndex = -1;
 
@@ -823,16 +819,46 @@ if(localStorage.getItem('admin_logged_in')==='true'){
 }
 
 // ============================================================
-//  ЗАГРУЗКА ДАННЫХ
+//  ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ СЛИЯНИЯ
 // ============================================================
-async function loadAllData(){
+function mergeArrays(localArr, cloudArr, idKey = 'id') {
+  const map = new Map();
+  localArr.forEach(item => { map.set(item[idKey], item); });
+  cloudArr.forEach(item => {
+    if (!map.has(item[idKey])) {
+      map.set(item[idKey], item);
+    }
+  });
+  return Array.from(map.values());
+}
+
+// ============================================================
+//  ЗАГРУЗКА ДАННЫХ ИЗ ОБЛАКА (БЕЗОПАСНАЯ)
+// ============================================================
+async function loadAllData() {
   try {
-    const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
+    const res = await fetch(JSONBIN_URL + '/latest', { 
+      headers: { 'X-Master-Key': JSONBIN_KEY } 
+    });
+    
     if (res.ok) {
       const data = await res.json();
-      allOrders = data.record.orders || [];
-      allBookings = data.record.bookings || [];
-      showSyncStatus('✅ Данные загружены из облака', 'success');
+      const cloudOrders = data.record.orders || [];
+      const cloudBookings = data.record.bookings || [];
+      
+      // Если в облаке есть данные - загружаем их
+      if (cloudOrders.length > 0 || cloudBookings.length > 0) {
+        allOrders = cloudOrders;
+        allBookings = cloudBookings;
+        localStorage.setItem('orders', JSON.stringify(allOrders));
+        localStorage.setItem('bookings', JSON.stringify(allBookings));
+        showSyncStatus('✅ Данные загружены из облака', 'success');
+      } else {
+        // Если облако пустое - оставляем локальные
+        allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+        allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        showSyncStatus('⚠️ Облако пусто, загружены локальные данные', '');
+      }
     } else {
       throw new Error('Ошибка загрузки');
     }
@@ -845,25 +871,74 @@ async function loadAllData(){
   loadCurrentTab();
 }
 
-async function syncWithCloud(){
+// ============================================================
+//  СИНХРОНИЗАЦИЯ С ОБЛАКОМ (СЛИЯНИЕ)
+// ============================================================
+async function syncWithCloud() {
   showSyncStatus('⏳ Синхронизация...', '');
+  
   try {
+    const localOrders = allOrders;
+    const localBookings = allBookings;
+    
+    const res = await fetch(JSONBIN_URL + '/latest', { 
+      headers: { 'X-Master-Key': JSONBIN_KEY } 
+    });
+    
+    let cloudOrders = [];
+    let cloudBookings = [];
+    let cloudReviews = [];
+    
+    if (res.ok) {
+      const data = await res.json();
+      cloudOrders = data.record.orders || [];
+      cloudBookings = data.record.bookings || [];
+      cloudReviews = data.record.reviews || [];
+    }
+    
+    // СЛИВАЕМ данные
+    const mergedOrders = mergeArrays(localOrders, cloudOrders, 'id');
+    const mergedBookings = mergeArrays(localBookings, cloudBookings, 'id');
+    
+    allOrders = mergedOrders;
+    allBookings = mergedBookings;
+    
+    localStorage.setItem('orders', JSON.stringify(mergedOrders));
+    localStorage.setItem('bookings', JSON.stringify(mergedBookings));
+    
     await fetch(JSONBIN_URL, {
       method: 'PUT',
-      headers: { 'X-Master-Key': JSONBIN_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orders: allOrders, bookings: allBookings })
+      headers: { 
+        'X-Master-Key': JSONBIN_KEY, 
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ 
+        orders: mergedOrders, 
+        bookings: mergedBookings,
+        reviews: cloudReviews
+      })
     });
-    showSyncStatus('✅ Данные синхронизированы с облаком', 'success');
+    
+    showSyncStatus(`✅ Синхронизировано: ${mergedOrders.length} заказов, ${mergedBookings.length} броней`, 'success');
+    loadCurrentTab();
+    
   } catch(e) {
+    console.error('Ошибка синхронизации:', e);
     showSyncStatus('❌ Ошибка синхронизации: ' + e.message, 'error');
   }
 }
 
+// ============================================================
+//  СОХРАНЕНИЕ В LOCALSTORAGE
+// ============================================================
 function saveToLocalStorage() {
   localStorage.setItem('orders', JSON.stringify(allOrders));
   localStorage.setItem('bookings', JSON.stringify(allBookings));
 }
 
+// ============================================================
+//  ПОКАЗ СТАТУСА
+// ============================================================
 function showSyncStatus(text, type) {
   const el = document.getElementById('sync-status');
   el.textContent = text;
@@ -1009,7 +1084,7 @@ function loadStatsRange(){
     <div class="section-title">🏆 Топ-10 блюд</div>
     <div class="dishes-stats">${getTopDishesHTML(orders)}</div>
     <div class="section-title">📅 Брони по залам</div>
-    <table class="booking-stats-table"><tr><th>Зал</th><th>Броней</th></tr>${hallRows||'<tr><td colspan="2">Нет данных</td></tr>'}</table>`;
+    <table class="booking-stats-table"><tr><th>Зал</th><th>Броней</th></tr>${hallRows||'<tr><td colspan="2">Нет данных</td>'}</table>`;
 }
 
 function getTopDishesHTML(orders){
